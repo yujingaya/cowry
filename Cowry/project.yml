@@ -1,0 +1,41 @@
+# Source of truth for Cowry.xcodeproj. Regenerate with `xcodegen` in this directory.
+name: Cowry
+options:
+  bundleIdPrefix: com.yujingaya
+  deploymentTarget:
+    macOS: "15.0"
+  developmentLanguage: en
+packages:
+  CowryKit:
+    path: ../CowryKit
+targets:
+  Cowry:
+    type: application
+    platform: macOS
+    sources:
+      - path: Cowry
+    dependencies:
+      - package: CowryKit
+        product: Ledger
+      - package: CowryKit
+        product: LedgerCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.yujingaya.cowry
+        PRODUCT_NAME: Cowry
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Cowry
+        INFOPLIST_KEY_NSPrincipalClass: NSApplication
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.finance
+        INFOPLIST_KEY_NSHumanReadableCopyright: ""
+        MARKETING_VERSION: "0.1"
+        CURRENT_PROJECT_VERSION: "1"
+        SWIFT_VERSION: "6.0"
+        SWIFT_STRICT_CONCURRENCY: complete
+        LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+        SWIFT_EMIT_LOC_STRINGS: YES
+        # Signed to run locally until the App Group container needs a team (design.md §5.6).
+        CODE_SIGN_IDENTITY: "-"
+        CODE_SIGN_STYLE: Manual
+        ENABLE_HARDENED_RUNTIME: NO
+        ENABLE_USER_SCRIPT_SANDBOXING: YES

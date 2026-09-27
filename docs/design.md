@@ -314,17 +314,28 @@ CREATE INDEX entry_by_date ON entry(date, created_at, id);
 -- account_id is as authored; resolved_account_id follows merged_into.
 -- Balances and registers use resolved_account_id. Merging accounts rewrites only the
 -- resolved column, so entry content (and its rev and digest) stays the same.
+-- date and created_at copy the entry's, so a register reads one index in journal order.
 CREATE TABLE posting (
   entry_id            TEXT NOT NULL REFERENCES entry(id) ON DELETE CASCADE,
   idx                 INTEGER NOT NULL,
-  date                TEXT NOT NULL,                 -- copy of entry.date (for indexing)
+  date                TEXT NOT NULL,
+  created_at          TEXT NOT NULL,
   account_id          TEXT NOT NULL REFERENCES account(id),
   resolved_account_id TEXT NOT NULL REFERENCES account(id),
   commodity_id        TEXT NOT NULL REFERENCES commodity(id),
   amount              INTEGER NOT NULL,
   PRIMARY KEY (entry_id, idx)
 ) WITHOUT ROWID;
-CREATE INDEX posting_by_account ON posting(resolved_account_id, date, commodity_id, amount);
+CREATE INDEX posting_by_account
+  ON posting(resolved_account_id, date, created_at, entry_id, commodity_id, amount);
+CREATE INDEX posting_by_date ON posting(date, resolved_account_id, commodity_id, amount);
+
+-- Current balance per account and commodity, kept by triggers on posting
+-- (insert, delete, and updates of resolved_account_id / commodity_id / amount).
+CREATE TABLE balance (
+  account_id TEXT NOT NULL, commodity_id TEXT NOT NULL, amount INTEGER NOT NULL,
+  PRIMARY KEY (account_id, commodity_id)
+) WITHOUT ROWID;
 
 CREATE TABLE price (
   id TEXT PRIMARY KEY, base_id TEXT NOT NULL, quote_id TEXT NOT NULL,
@@ -362,21 +373,33 @@ CREATE TABLE meta (key TEXT PRIMARY KEY, value BLOB NOT NULL);
 
 ### 5.4 Migrations
 
-- Only the op table and the op body format need careful migrations.
-- When a materialized table's schema changes, drop the tables and rebuild them by replaying the log. Materialized tables get no migration code.
-- `PRAGMA user_version` tells whether the schema changed.
+- Only the op table and the op body format need careful migrations (GRDB `DatabaseMigrator`).
+- The materialized tables carry a version in `PRAGMA user_version` (currently 2). When it differs on open, the tables are dropped, recreated, and rebuilt by replaying the log; materialized tables get no migration code.
+- Replay checks every recorded state digest and refuses to open on a mismatch, rather than show a ledger that differs from the recorded one.
+- Opening currently blocks while replaying. Large ledgers need a progress window before this ships (a Debug build replays 92,500 ops in about a minute; Release is far faster).
 
 ### 5.5 Queries and performance
 
 - **Scale.** Twenty entries a day for ten years is about 73,000 entries and 180,000 postings. Performance targets assume a generous 100,000 entries (§8.2).
-- **Account balances.** `SUM` over the covering index `posting_by_account`; milliseconds.
-- **Held in memory.** The account tree, commodities, the sorted key array of each open list, and running sums of each open register (§8.3).
-- **Monthly balance snapshot table.** Only if measurements show a need.
-- **Full replay.** Target: a few seconds for 100,000 ops, to be measured.
+- **Current balances** come from the trigger-maintained `balance` table; balances as of a past date sum `posting`.
+- **Period totals** (the sidebar's categories) range-scan `posting_by_date`.
+- **Registers** read `posting_by_account` in journal order and sum each entry's postings in Swift, avoiding a join and a sort.
+- **Parsing.** Dates, HLC readings and UUIDs are parsed from raw bytes; at 100,000 rows the Foundation parsers cost more than the query itself.
+- **Held in memory.** The account tree, commodities, the sorted key array of each open list, and each open register (§8.3).
+- **Measured** (`COWRY_BENCHMARK=1 swift test -c release --filter Benchmarks`, 100,000 entries, M-series Mac):
+
+| Read | Time |
+|---|---|
+| All journal keys | 29 ms |
+| Text search | 21 ms |
+| Register of an account with 100,000 postings | 61 ms |
+| All current balances | 0.1 ms |
+| Posting 100,000 entries in batches | 28 s (0.28 ms per op) |
 
 ### 5.6 File location (proposal)
 
-- The database lives in an App Group container from phase 1.
+- For now the library is `~/Library/Application Support/Cowry/Library.cowry`, and the app is signed to run locally.
+- The database moves to an App Group container once the app is signed with a team.
 - Then a CLI bundled in the app (phase 3) needs no file move.
 - CLI signing and entitlement details are verified in phase 3.
 
@@ -611,7 +634,11 @@ Screens, flows and presentation rules follow [ux.md](ux.md). This section covers
   - List: a view-based `NSTableView`
   - Inspector
 - **Mixing in SwiftUI.** Static screens such as Settings may use SwiftUI via `NSHostingController`. Lists and editing are AppKit.
-- **Undo.** `UndoManager` registers actions that author the inverse op, so undoing is itself an op in the log ([ux.md §4.6](ux.md)).
+- **Undo.** `UndoManager` registers actions that author the inverse op, so undoing is itself an op in the log ([ux.md §4.6](ux.md)). The inverse is registered synchronously while the undo manager is undoing, so it lands on the redo stack; the ledger write follows asynchronously.
+- **Project.** `Cowry/project.yml` generates `Cowry.xcodeproj` with XcodeGen (`cd Cowry && xcodegen`); the project file isn't committed. Strings live in `Localizable.xcstrings` (English source, Korean translations).
+- **Debug launch arguments.** `-CowryLibraryPath <path>` opens another library file; `-CowrySampleYears N` (with optional `-CowrySamplePerDay N`) fills a new library with sample data; `-CowryExerciseNavigation YES` visits every account and category with searches and back/forward, then quits (a smoke test for list reloads). The Debug menu adds sample data and verifies the ledger.
+- **Measured in the app** (Release, 92,500 entries): launch to a populated list in 0.7 s; reloading All Transactions takes 34 ms.
+- **Not yet incremental.** Account and category registers rebuild on every change (about 60 ms at 100,000 postings), and change events touching more than 500 entries reload the journal.
 
 ### 8.2 Performance targets (proposal)
 

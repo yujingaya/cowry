@@ -1,0 +1,1658 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "%@ + %lld more": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ 외 %lld"
+          }
+        }
+      }
+    },
+    "%@ has accounts under it. Move or delete them first.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ 아래에 계정이 있어요. 먼저 옮기거나 지우세요."
+          }
+        }
+      }
+    },
+    "%@ has balance checks. Remove them first.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@에 잔액 확인 기록이 있어요. 먼저 지우세요."
+          }
+        }
+      }
+    },
+    "%@ has transactions after %@.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@에 %2$@ 이후 거래가 있어요."
+          }
+        }
+      }
+    },
+    "%@ has transactions. Stop using it, or merge it into another account.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@에 거래가 있어요. 사용을 종료하거나 다른 계정에 합치세요."
+          }
+        }
+      }
+    },
+    "%@ is hidden or no longer in use.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ 계정은 숨겨졌거나 사용이 종료됐어요."
+          }
+        }
+      }
+    },
+    "%@ is hidden. Show it again to use it.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ 통화가 숨겨져 있어요. 다시 보이게 해야 쓸 수 있어요."
+          }
+        }
+      }
+    },
+    "%@ isn’t in use on %@. Change the date or choose another account.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ 계정은 %2$@에 사용 중이 아니에요. 날짜를 바꾸거나 다른 계정을 고르세요."
+          }
+        }
+      }
+    },
+    "%lld matching": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld건 일치"
+          }
+        }
+      }
+    },
+    "%lld transactions": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld건"
+          }
+        },
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld transaction"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld transactions"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld transactions selected": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "거래 %lld건 선택됨"
+          }
+        },
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld transaction selected"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld transactions selected"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld transactions · %@": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld건 · %@"
+          }
+        },
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld transaction · %@"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld transactions · %@"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "A currency with that code already exists.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "같은 코드의 통화가 이미 있어요."
+          }
+        }
+      }
+    },
+    "About %@": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@에 관하여"
+          }
+        }
+      }
+    },
+    "Account": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "계좌"
+          }
+        }
+      }
+    },
+    "Accounts": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "계좌"
+          }
+        }
+      }
+    },
+    "Add “%@”": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "‘%@’ 추가"
+          }
+        }
+      }
+    },
+    "All Transactions": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "모든 거래"
+          }
+        }
+      }
+    },
+    "Amount": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "금액"
+          }
+        }
+      }
+    },
+    "Amounts can’t be zero.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "금액은 0이 될 수 없어요."
+          }
+        }
+      }
+    },
+    "An account can only go under an account of the same kind.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "같은 종류의 계정 아래에만 넣을 수 있어요."
+          }
+        }
+      }
+    },
+    "An account can’t be merged into itself.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "계정을 자기 자신에 합칠 수 없어요."
+          }
+        }
+      }
+    },
+    "An account can’t go under itself.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "계정을 자기 아래에 넣을 수 없어요."
+          }
+        }
+      }
+    },
+    "An account can’t stop before it starts.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "시작일보다 앞선 날짜로 사용을 종료할 수 없어요."
+          }
+        }
+      }
+    },
+    "Another account here already has that name.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "여기에 같은 이름의 계정이 이미 있어요."
+          }
+        }
+      }
+    },
+    "Back": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "뒤로"
+          }
+        }
+      }
+    },
+    "Back/Forward": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "뒤로/앞으로"
+          }
+        }
+      }
+    },
+    "Balance": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "잔액"
+          }
+        }
+      }
+    },
+    "Balance %@": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "잔액 %@"
+          }
+        }
+      }
+    },
+    "Bring All to Front": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "모두 앞으로 가져오기"
+          }
+        }
+      }
+    },
+    "Browse": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "둘러보기"
+          }
+        }
+      }
+    },
+    "Cafés": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "카페"
+          }
+        }
+      }
+    },
+    "Cancel": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "취소"
+          }
+        }
+      }
+    },
+    "Cash": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "현금"
+          }
+        }
+      }
+    },
+    "Category": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "분류"
+          }
+        }
+      }
+    },
+    "Charged": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "청구 금액"
+          }
+        }
+      }
+    },
+    "Choose an account for “%@”.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "‘%@’ 칸의 계정을 고르세요."
+          }
+        }
+      }
+    },
+    "Choose two different currencies.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "서로 다른 두 통화를 고르세요."
+          }
+        }
+      }
+    },
+    "Close Window": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "윈도우 닫기"
+          }
+        }
+      }
+    },
+    "Copy": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "복사하기"
+          }
+        }
+      }
+    },
+    "Counterpart": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "상대"
+          }
+        }
+      }
+    },
+    "Cowry couldn’t open your ledger.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "장부를 열 수 없어요."
+          }
+        }
+      }
+    },
+    "Create": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "만들기"
+          }
+        }
+      }
+    },
+    "Culture": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "문화"
+          }
+        }
+      }
+    },
+    "Cut": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "오려두기"
+          }
+        }
+      }
+    },
+    "Date": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "날짜"
+          }
+        }
+      }
+    },
+    "Decimal places must be between 0 and 12.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "소수 자릿수는 0에서 12 사이여야 해요."
+          }
+        }
+      }
+    },
+    "Delete": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "삭제"
+          }
+        }
+      }
+    },
+    "Delete %lld Transactions": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "거래 %lld건 삭제"
+          }
+        },
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Delete %lld Transaction"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Delete %lld Transactions"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Delete “%@”": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "‘%@’ 삭제"
+          }
+        }
+      }
+    },
+    "Deleted": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "삭제함"
+          }
+        }
+      }
+    },
+    "Deposited to": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "입금 계좌"
+          }
+        }
+      }
+    },
+    "Dining Out": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "외식"
+          }
+        }
+      }
+    },
+    "Discard": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "버리기"
+          }
+        }
+      }
+    },
+    "Duplicate": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "복제"
+          }
+        }
+      }
+    },
+    "Edit": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "편집"
+          }
+        }
+      }
+    },
+    "Edit “%@”": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "‘%@’ 수정"
+          }
+        }
+      }
+    },
+    "Edited": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "수정함"
+          }
+        }
+      }
+    },
+    "Education": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "교육"
+          }
+        }
+      }
+    },
+    "Enter a name.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "이름을 입력하세요."
+          }
+        }
+      }
+    },
+    "Enter an amount for “%@”.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "‘%@’ 칸에 금액을 입력하세요."
+          }
+        }
+      }
+    },
+    "Enter an amount greater than zero.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "0보다 큰 금액을 입력하세요."
+          }
+        }
+      }
+    },
+    "Enter an amount.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "금액을 입력하세요."
+          }
+        }
+      }
+    },
+    "Enter Full Screen": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "전체 화면 시작"
+          }
+        }
+      }
+    },
+    "Enter the starting balance as a number.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "시작 잔액을 숫자로 입력하세요."
+          }
+        }
+      }
+    },
+    "File": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "파일"
+          }
+        }
+      }
+    },
+    "Find": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "찾기"
+          }
+        }
+      }
+    },
+    "Flow": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "흐름"
+          }
+        }
+      }
+    },
+    "Food": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "식비"
+          }
+        }
+      }
+    },
+    "Forward": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "앞으로"
+          }
+        }
+      }
+    },
+    "From": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "보낸 계좌"
+          }
+        }
+      }
+    },
+    "From your Mac’s region settings. Totals and reports use this currency.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mac의 지역 설정에서 가져왔어요. 합계와 보고서를 이 통화로 보여줘요."
+          }
+        }
+      }
+    },
+    "Get Started": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "시작하기"
+          }
+        }
+      }
+    },
+    "Gifts": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "경조사"
+          }
+        }
+      }
+    },
+    "Go": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "이동"
+          }
+        }
+      }
+    },
+    "Groceries": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "장보기"
+          }
+        }
+      }
+    },
+    "Health": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "의료"
+          }
+        }
+      }
+    },
+    "Help": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "도움말"
+          }
+        }
+      }
+    },
+    "Hide %@": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ 가리기"
+          }
+        }
+      }
+    },
+    "Hide Others": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "기타 가리기"
+          }
+        }
+      }
+    },
+    "History (%lld)": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "이력 (%lld)"
+          }
+        }
+      }
+    },
+    "Household": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "생활"
+          }
+        }
+      }
+    },
+    "Housing": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "주거"
+          }
+        }
+      }
+    },
+    "Income": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "수입"
+          }
+        }
+      }
+    },
+    "Income category": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "수입 분류"
+          }
+        }
+      }
+    },
+    "Income · %@": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "수입 · %@"
+          }
+        }
+      }
+    },
+    "Inside": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "위치"
+          }
+        }
+      }
+    },
+    "Keep an accurate record of your money, and get an instant answer to any question you ask of it.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "내 돈의 기록을 정확하게 남기고, 어떤 질문에도 바로 답해요."
+          }
+        }
+      }
+    },
+    "Kind": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "종류"
+          }
+        }
+      }
+    },
+    "Lines": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "항목"
+          }
+        }
+      }
+    },
+    "Main currency": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "기본 통화"
+          }
+        }
+      }
+    },
+    "Memo": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "메모"
+          }
+        }
+      }
+    },
+    "Minimize": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "최소화"
+          }
+        }
+      }
+    },
+    "Money In": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "들어온 돈"
+          }
+        }
+      }
+    },
+    "Money Out": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "나간 돈"
+          }
+        }
+      }
+    },
+    "Money owed (cards, loans)": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "갚을 돈 (카드·대출)"
+          }
+        }
+      }
+    },
+    "Name": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "이름"
+          }
+        }
+      }
+    },
+    "New Account or Category": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "새 계좌 또는 분류"
+          }
+        }
+      }
+    },
+    "New Account or Category…": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "새 계좌 또는 분류…"
+          }
+        }
+      }
+    },
+    "New Transaction": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "새 거래"
+          }
+        }
+      }
+    },
+    "New Transaction (⌘N)": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "새 거래 (⌘N)"
+          }
+        }
+      }
+    },
+    "No memo": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "메모 없음"
+          }
+        }
+      }
+    },
+    "No Selection": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "선택한 거래 없음"
+          }
+        }
+      }
+    },
+    "No transactions match “%@”.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "‘%@’ 검색 결과가 없어요."
+          }
+        }
+      }
+    },
+    "No transactions yet.\nChoose File › New Transaction (⌘N) to record one.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "아직 거래가 없어요.\n파일 › 새 거래(⌘N)로 기록해 보세요."
+          }
+        }
+      }
+    },
+    "Other Income": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "기타 수입"
+          }
+        }
+      }
+    },
+    "Paid with": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "결제 수단"
+          }
+        }
+      }
+    },
+    "Paste": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "붙여넣기"
+          }
+        }
+      }
+    },
+    "Payee": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "내용"
+          }
+        }
+      }
+    },
+    "Phone and Internet": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "통신"
+          }
+        }
+      }
+    },
+    "Quit %@": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ 종료"
+          }
+        }
+      }
+    },
+    "Rate: 1 %@ = %@ %@": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "환율: 1 %1$@ = %2$@ %3$@"
+          }
+        }
+      }
+    },
+    "Received": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "받은 금액"
+          }
+        }
+      }
+    },
+    "Record": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "기록"
+          }
+        }
+      }
+    },
+    "Record and New": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "기록하고 계속"
+          }
+        }
+      }
+    },
+    "Recorded": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "기록함"
+          }
+        }
+      }
+    },
+    "Redo": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "실행 복귀"
+          }
+        }
+      }
+    },
+    "Salary": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "급여"
+          }
+        }
+      }
+    },
+    "Search %@": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@에서 검색"
+          }
+        }
+      }
+    },
+    "Search All Transactions": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "모든 거래에서 검색"
+          }
+        }
+      }
+    },
+    "Select All": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "전체 선택"
+          }
+        }
+      }
+    },
+    "Sent": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "보낸 금액"
+          }
+        }
+      }
+    },
+    "Shopping": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "쇼핑"
+          }
+        }
+      }
+    },
+    "Show All": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "모두 보기"
+          }
+        }
+      }
+    },
+    "Show Inspector": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "인스펙터 보기"
+          }
+        }
+      }
+    },
+    "Show Ledger in Finder": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "장부 파일 Finder에서 보기"
+          }
+        }
+      }
+    },
+    "Show Sidebar": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "사이드바 보기"
+          }
+        }
+      }
+    },
+    "Sidebar": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "사이드바"
+          }
+        }
+      }
+    },
+    "Something this change refers to no longer exists.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "이 변경이 가리키는 항목이 더 이상 없어요."
+          }
+        }
+      }
+    },
+    "Spending": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "지출"
+          }
+        }
+      }
+    },
+    "Spending category": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "지출 분류"
+          }
+        }
+      }
+    },
+    "Spending · %@": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "지출 · %@"
+          }
+        }
+      }
+    },
+    "Start": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "시작 방식"
+          }
+        }
+      }
+    },
+    "Start empty": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "빈 장부로 시작"
+          }
+        }
+      }
+    },
+    "Start with suggested categories": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "추천 분류로 시작"
+          }
+        }
+      }
+    },
+    "Starting balance": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "시작 잔액"
+          }
+        }
+      }
+    },
+    "Starts on": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "시작일"
+          }
+        }
+      }
+    },
+    "That already exists.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "이미 있어요."
+          }
+        }
+      }
+    },
+    "That amount is too large.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "금액이 너무 커요."
+          }
+        }
+      }
+    },
+    "That setting value isn’t valid.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "설정 값이 올바르지 않아요."
+          }
+        }
+      }
+    },
+    "The change couldn’t be made.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "변경할 수 없어요."
+          }
+        }
+      }
+    },
+    "The lines don’t add up. %@ is left over.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "항목의 합이 맞지 않아요. 남은 금액: %@"
+          }
+        }
+      }
+    },
+    "This account is already in use.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "이미 사용 중인 계정이에요."
+          }
+        }
+      }
+    },
+    "This account is managed by Cowry and can’t be changed.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cowry가 관리하는 계정이라 바꿀 수 없어요."
+          }
+        }
+      }
+    },
+    "This transaction was changed elsewhere. It has been reloaded; make your change again.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "다른 곳에서 이 거래가 바뀌었어요. 새로 불러왔으니 다시 고쳐 주세요."
+          }
+        }
+      }
+    },
+    "To": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "받는 계좌"
+          }
+        }
+      }
+    },
+    "Top Level": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "맨 위"
+          }
+        }
+      }
+    },
+    "Transaction": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "거래"
+          }
+        }
+      }
+    },
+    "Transactions": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "거래"
+          }
+        }
+      }
+    },
+    "Transfer": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "이체"
+          }
+        }
+      }
+    },
+    "Transportation": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "교통"
+          }
+        }
+      }
+    },
+    "Undo": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "실행 취소"
+          }
+        }
+      }
+    },
+    "Unknown Account": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "알 수 없는 계정"
+          }
+        }
+      }
+    },
+    "View": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "보기"
+          }
+        }
+      }
+    },
+    "Where money is (bank, cash, investments)": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "돈이 있는 곳 (통장·현금·투자)"
+          }
+        }
+      }
+    },
+    "Window": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "윈도우"
+          }
+        }
+      }
+    },
+    "Your ledger stays on this Mac. No sign-up, no servers.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "장부는 이 Mac에만 저장돼요. 가입도, 서버도 없어요."
+          }
+        }
+      }
+    },
+    "Zoom": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "확대/축소"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

@@ -4,3 +4,5 @@
 DerivedData/
 xcuserdata/
 *.xcuserstate
+.build-app/
+Cowry/Cowry.xcodeproj/
