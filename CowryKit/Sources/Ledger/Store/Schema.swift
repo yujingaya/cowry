@@ -1,13 +1,36 @@
 internal import GRDB
 
 enum Schema {
+    /// Version of the materialized tables, kept in `PRAGMA user_version`. When it changes, the
+    /// tables are dropped and rebuilt by replaying the log (design.md §5.4); no migration code.
+    static let materializedVersion = 2
+
+    /// Migrations for the op log and device-local tables only.
     static func migrator() -> DatabaseMigrator {
         var migrator = DatabaseMigrator()
         migrator.registerMigration("v1") { db in
             try createLog(db)
-            try createMaterialized(db)
         }
         return migrator
+    }
+
+    static let materializedTables = [
+        "posting", "balance", "balance_assertion", "price", "conflict_dismissal", "setting", "entry", "account",
+        "commodity",
+    ]
+
+    /// Drops and recreates the materialized tables if their version changed. Returns whether
+    /// they need to be rebuilt from the log.
+    static func prepareMaterialized(_ db: Database) throws -> Bool {
+        let version = try Int.fetchOne(db, sql: "PRAGMA user_version") ?? 0
+        guard version != materializedVersion else { return false }
+        try db.execute(sql: "PRAGMA defer_foreign_keys = ON")
+        for table in materializedTables {
+            try db.execute(sql: "DROP TABLE IF EXISTS \(table)")
+        }
+        try createMaterialized(db)
+        try db.execute(sql: "PRAGMA user_version = \(materializedVersion)")
+        return true
     }
 
     /// The op log and device-local bookkeeping. Changes here need real migrations.
@@ -97,17 +120,46 @@ enum Schema {
 
             -- account_id is as authored; resolved_account_id follows merges and is what
             -- balances and registers use. Merging rewrites only the resolved column.
+            -- date and created_at copy the entry's, so registers read from one index in order.
             CREATE TABLE posting (
               entry_id            TEXT NOT NULL REFERENCES entry(id) ON DELETE CASCADE,
               idx                 INTEGER NOT NULL,
               date                TEXT NOT NULL,
+              created_at          TEXT NOT NULL,
               account_id          TEXT NOT NULL REFERENCES account(id),
               resolved_account_id TEXT NOT NULL REFERENCES account(id),
               commodity_id        TEXT NOT NULL REFERENCES commodity(id),
               amount              INTEGER NOT NULL,
               PRIMARY KEY (entry_id, idx)
             ) WITHOUT ROWID;
-            CREATE INDEX posting_by_account ON posting(resolved_account_id, date, commodity_id, amount);
+            CREATE INDEX posting_by_account
+              ON posting(resolved_account_id, date, created_at, entry_id, commodity_id, amount);
+            CREATE INDEX posting_by_date ON posting(date, resolved_account_id, commodity_id, amount);
+
+            -- Current balance of every account, kept by triggers so reading all balances
+            -- doesn't aggregate every posting.
+            CREATE TABLE balance (
+              account_id   TEXT NOT NULL,
+              commodity_id TEXT NOT NULL,
+              amount       INTEGER NOT NULL,
+              PRIMARY KEY (account_id, commodity_id)
+            ) WITHOUT ROWID;
+            CREATE TRIGGER posting_inserted AFTER INSERT ON posting BEGIN
+              INSERT INTO balance (account_id, commodity_id, amount)
+              VALUES (NEW.resolved_account_id, NEW.commodity_id, NEW.amount)
+              ON CONFLICT (account_id, commodity_id) DO UPDATE SET amount = amount + excluded.amount;
+            END;
+            CREATE TRIGGER posting_deleted AFTER DELETE ON posting BEGIN
+              UPDATE balance SET amount = amount - OLD.amount
+              WHERE account_id = OLD.resolved_account_id AND commodity_id = OLD.commodity_id;
+            END;
+            CREATE TRIGGER posting_moved AFTER UPDATE OF resolved_account_id, commodity_id, amount ON posting BEGIN
+              UPDATE balance SET amount = amount - OLD.amount
+              WHERE account_id = OLD.resolved_account_id AND commodity_id = OLD.commodity_id;
+              INSERT INTO balance (account_id, commodity_id, amount)
+              VALUES (NEW.resolved_account_id, NEW.commodity_id, NEW.amount)
+              ON CONFLICT (account_id, commodity_id) DO UPDATE SET amount = amount + excluded.amount;
+            END;
 
             CREATE TABLE price (
               id       TEXT PRIMARY KEY,

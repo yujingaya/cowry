@@ -60,6 +60,18 @@ import Testing
         #expect(earlier < later)
     }
 
+    @Test func fastParserAgreesWithFoundation() {
+        for _ in 0 ..< 500 {
+            let uuid = UUID()
+            #expect(Entry.ID(uuid.uuidString)?.uuid == uuid)
+            #expect(Entry.ID(uuid.uuidString.lowercased())?.uuid == uuid)
+        }
+        for bad in ["", "not-a-uuid", "6ba7b810-9dad-11d1-80b4-00c04fd430cg", "6ba7b810x9dad-11d1-80b4-00c04fd430c8",
+                    "6ba7b810-9dad-11d1-80b4-00c04fd430c"] {
+            #expect(Entry.ID(bad) == nil)
+        }
+    }
+
     @Test func stringIsLowercase() {
         let id = Entry.ID.generate()
         #expect(id.string == id.string.lowercased())

@@ -285,3 +285,76 @@ struct SeededGenerator: RandomNumberGenerator {
         return z ^ (z >> 31)
     }
 }
+
+@Suite struct AppSupportTests {
+    @Test func activityCoversOnlyTheRange() async throws {
+        let f = try await Fixture()
+        try await f.spend(1_000, on: "2026-02-28")
+        try await f.spend(2_000, on: "2026-03-01")
+        try await f.spend(4_000, on: "2026-03-31")
+        let march = LocalDate("2026-03-01")!...LocalDate("2026-03-31")!
+        #expect(try f.ledger.snapshot().activity(in: march)[f.food.id] == [f.krw: 6_000])
+    }
+
+    @Test func payeeSuggestionsPreferPrefixAndLatest() async throws {
+        let f = try await Fixture()
+        try await f.spend(4_000, on: "2026-03-01", at: "스타벅스")
+        let latest = try await f.spend(4_500, on: "2026-03-05", at: "스타벅스")
+        try await f.spend(9_000, on: "2026-03-06", at: "이마트 스타필드")
+        let suggestions = try f.ledger.snapshot().payeeSuggestions(matching: "스타")
+        #expect(suggestions.map(\.payee) == ["스타벅스", "이마트 스타필드"])
+        #expect(suggestions.first?.id == latest.id)
+    }
+
+    @Test func restoreBringsBackAVoidedEntryUnderItsID() async throws {
+        let f = try await Fixture()
+        let entry = try await f.spend(4_500, on: "2026-03-01", at: "스타벅스")
+        try await f.ledger.void(entry)
+        let restored = try await f.ledger.restore(entry)
+        #expect(restored.id == entry.id)
+        #expect(restored.postings == entry.postings)
+        #expect(try f.ledger.snapshot().history(of: entry.id).map(\.kind) == [.postEntry, .voidEntry, .postEntry])
+        #expect(try f.ledger.verify().isValid)
+    }
+
+    @Test func batchPostingPublishesOneOrderedChange() async throws {
+        let f = try await Fixture()
+        var changes = f.ledger.changes().makeAsyncIterator()
+        let drafts = (1...50).map { f.draft("2026-03-01", "p\($0)", (f.food, f.krw, Int64($0)), (f.card, f.krw, -Int64($0))) }
+        let entries = try await f.ledger.post(drafts)
+        let change = try #require(await changes.next())
+        #expect(change.entries == Set(entries.map(\.id)))
+        #expect(try f.ledger.snapshot().journal().count == 50)
+        #expect(try f.ledger.verify().isValid)
+    }
+}
+
+@Suite struct MaterializationTests {
+    @Test func balanceTableMatchesSummedPostings() async throws {
+        let f = try await Fixture()
+        let old = try await f.ledger.openAccount(name: "구 카드", type: .liability, openedOn: Fixture.opened)
+        let a = try await f.spend(1_000, on: "2026-03-01", from: old)
+        try await f.spend(2_000, on: "2026-03-02")
+        var draft = EntryDraft(a)
+        draft.postings = [Posting(account: f.food.id, commodity: f.krw, amount: 1_500),
+                          Posting(account: old.id, commodity: f.krw, amount: -1_500)]
+        let amended = try await f.ledger.amend(a, to: draft)
+        try await f.ledger.mergeAccounts(old.id, into: f.card.id)
+        try await f.ledger.void(amended)
+        let snapshot = f.ledger.snapshot()
+        let maintained = try snapshot.balances()
+        let summed = try snapshot.balances(asOf: LocalDate("9999-12-31")!)
+        #expect(maintained == summed)
+        #expect(maintained[f.card.id] == [f.krw: -2_000])
+    }
+
+    @Test func changingTheMaterializedVersionRebuildsByReplay() async throws {
+        let f = try await Fixture()
+        try await f.spend(4_500, on: "2026-03-01", at: "스타벅스")
+        let before = try f.ledger.snapshot().journal().keys
+        try await f.ledger.pool.write { db in try db.execute(sql: "PRAGMA user_version = 1") }
+        let reopened = try Ledger(at: f.url, device: .named("test-device"))
+        #expect(try reopened.snapshot().journal().keys == before)
+        #expect(try reopened.verify().isValid)
+    }
+}

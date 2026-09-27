@@ -11,7 +11,30 @@ public struct Identifier<Tag>: Hashable, Comparable, Sendable {
     }
 
     public init?(_ string: String) {
-        guard let uuid = UUID(uuidString: string) else { return nil }
+        // Fast path for the canonical 8-4-4-4-12 form; anything else goes through Foundation.
+        let parsed: UUID? = ASCII.withBytes(string) { bytes in
+            guard bytes.count == 36 else { return nil }
+            var raw: uuid_t = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+            let ok = withUnsafeMutableBytes(of: &raw) { out -> Bool in
+                var index = 0
+                var position = 0
+                while position < 36 {
+                    if position == 8 || position == 13 || position == 18 || position == 23 {
+                        guard bytes[position] == UInt8(ascii: "-") else { return false }
+                        position += 1
+                        continue
+                    }
+                    guard let high = ASCII.hexValue(bytes[position]), let low = ASCII.hexValue(bytes[position + 1])
+                    else { return false }
+                    out[index] = high << 4 | low
+                    index += 1
+                    position += 2
+                }
+                return true
+            }
+            return ok ? UUID(uuid: raw) : nil
+        }
+        guard let uuid = parsed ?? UUID(uuidString: string) else { return nil }
         self.uuid = uuid
     }
 

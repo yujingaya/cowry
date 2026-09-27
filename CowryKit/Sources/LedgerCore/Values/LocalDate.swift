@@ -18,12 +18,15 @@ public struct LocalDate: Hashable, Comparable, Sendable {
 
     /// Parses exactly `YYYY-MM-DD`.
     public init?(_ string: some StringProtocol) {
-        let utf8 = Array(string.utf8)
-        guard utf8.count == 10, utf8[4] == UInt8(ascii: "-"), utf8[7] == UInt8(ascii: "-"),
-              let year = Self.digits(utf8[0..<4]),
-              let month = Self.digits(utf8[5..<7]),
-              let day = Self.digits(utf8[8..<10])
-        else { return nil }
+        let parts: (Int, Int, Int)? = ASCII.withBytes(string) { bytes in
+            guard bytes.count == 10, bytes[4] == UInt8(ascii: "-"), bytes[7] == UInt8(ascii: "-"),
+                  let year = ASCII.digits(bytes, 0..<4),
+                  let month = ASCII.digits(bytes, 5..<7),
+                  let day = ASCII.digits(bytes, 8..<10)
+            else { return nil }
+            return (Int(year), Int(month), Int(day))
+        }
+        guard let (year, month, day) = parts else { return nil }
         self.init(year: year, month: month, day: day)
     }
 
@@ -43,14 +46,6 @@ public struct LocalDate: Hashable, Comparable, Sendable {
         }
     }
 
-    private static func digits(_ bytes: ArraySlice<UInt8>) -> Int? {
-        var value = 0
-        for byte in bytes {
-            guard (UInt8(ascii: "0")...UInt8(ascii: "9")).contains(byte) else { return nil }
-            value = value * 10 + Int(byte - UInt8(ascii: "0"))
-        }
-        return value
-    }
 }
 
 // MARK: - Day arithmetic

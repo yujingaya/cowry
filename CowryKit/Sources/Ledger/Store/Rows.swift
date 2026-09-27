@@ -208,14 +208,17 @@ extension Database {
         try execute(sql: "DELETE FROM posting WHERE entry_id = ?", arguments: [e.id.string])
         for (index, posting) in e.postings.enumerated() {
             try execute(sql: """
-                INSERT INTO posting (entry_id, idx, date, account_id, resolved_account_id, commodity_id, amount)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-                """, arguments: [e.id.string, index, e.date.description, posting.account.string,
-                                 try resolve(posting.account).string, posting.commodity.string, posting.amount])
+                INSERT INTO posting (entry_id, idx, date, created_at, account_id, resolved_account_id, commodity_id, amount)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                """, arguments: [e.id.string, index, e.date.description, e.createdAt.description,
+                                 posting.account.string, try resolve(posting.account).string,
+                                 posting.commodity.string, posting.amount])
         }
     }
 
     func deleteEntry(_ id: Entry.ID) throws {
+        // Postings go first, explicitly, so the balance triggers see them.
+        try execute(sql: "DELETE FROM posting WHERE entry_id = ?", arguments: [id.string])
         try execute(sql: "DELETE FROM entry WHERE id = ?", arguments: [id.string])
     }
 

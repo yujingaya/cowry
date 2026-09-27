@@ -19,6 +19,9 @@ public final class Ledger: Sendable {
         configuration.foreignKeysEnabled = true
         pool = try DatabasePool(path: url.path, configuration: configuration)
         try Schema.migrator().migrate(pool)
+        try pool.write { db in
+            if try Schema.prepareMaterialized(db) { try Replay.run(db) }
+        }
         self.device = device
         publisher = ChangePublisher(head: try pool.read { try Meta.head($0).seq })
 
@@ -134,6 +137,31 @@ public final class Ledger: Sendable {
 
     public func void(_ entry: Entry) async throws {
         try await commit { .voidEntry(try Authoring.voidEntry(entry, in: $0)) } result: { _, _ in }
+    }
+
+    /// Posts a voided entry again under its original ID, so its history reads post, void, post.
+    /// This is how "undo delete" works.
+    public func restore(_ entry: Entry) async throws -> Entry {
+        let draft = EntryDraft(date: entry.date, payee: entry.payee, memo: entry.memo, postings: entry.postings)
+        return try await commit { .postEntry(try Authoring.postEntry(id: entry.id, draft, in: $0)) }
+            result: { db, _ in try db.entry(entry.id)! }
+    }
+
+    /// Posts several entries in one transaction, one op each. For imports and sample data.
+    public func post(_ drafts: [EntryDraft]) async throws -> [Entry] {
+        let device = self.device
+        let publisher = self.publisher
+        let entries = try await pool.write { db in
+            try drafts.map { draft in
+                let id = Entry.ID.generate()
+                return try Self.commit(
+                    db, device: device, publisher: publisher,
+                    author: { .postEntry(try Authoring.postEntry(id: id, draft, in: $0)) },
+                    result: { db, _ in try db.entry(id)! })
+            }
+        }
+        publisher.flush(pool)
+        return entries
     }
 
     // MARK: Prices, assertions, settings

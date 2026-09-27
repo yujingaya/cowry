@@ -50,10 +50,12 @@ public struct LedgerSnapshot: Sendable {
     public func journal(_ filter: JournalFilter = .all) throws -> JournalIndex {
         try reader.read { db in
             let (clause, arguments) = Self.whereClause(filter)
-            let keys = try Row.fetchAll(db, sql: """
+            let cursor = try Row.fetchCursor(db, sql: """
                 SELECT e.id, e.date, e.created_at FROM entry e WHERE \(clause)
                 ORDER BY e.date, e.created_at, e.id
-                """, arguments: arguments).map(Self.key)
+                """, arguments: arguments)
+            var keys: [JournalKey] = []
+            while let row = try cursor.next() { keys.append(try Self.key(row)) }
             return JournalIndex(keys: keys)
         }
     }
@@ -79,31 +81,43 @@ public struct LedgerSnapshot: Sendable {
     public func register(of accounts: Set<Account.ID>) throws -> Register {
         guard !accounts.isEmpty else { return Register(accounts: accounts, rows: []) }
         return try reader.read { db in
-            let marks = databaseQuestionMarks(count: accounts.count)
-            let rows = try Row.fetchAll(db, sql: """
-                SELECT e.id, e.date, e.created_at, p.commodity_id, SUM(p.amount) AS amount
-                FROM posting p JOIN entry e ON e.id = p.entry_id
-                WHERE p.resolved_account_id IN (\(marks))
-                GROUP BY e.id, p.commodity_id
-                ORDER BY e.date, e.created_at, e.id
+            // Postings come off the covering index already in journal order; consecutive rows of
+            // one entry are summed here rather than with GROUP BY, which would force a sort.
+            let cursor = try Row.fetchCursor(db, sql: """
+                SELECT entry_id, date, created_at, commodity_id, amount FROM posting
+                WHERE resolved_account_id IN (\(databaseQuestionMarks(count: accounts.count)))
+                ORDER BY date, created_at, entry_id
                 """, arguments: StatementArguments(accounts.map(\.string)))
 
             var result: [RegisterRow] = []
             var balance: Holdings = [:]
+            var commodities: [String: Commodity.ID] = [:]
+            var currentID: String?
             var current: (key: JournalKey, amounts: Holdings)?
             func finish() {
                 guard let row = current else { return }
-                for (commodity, amount) in row.amounts { balance[commodity, default: 0] += amount }
-                result.append(RegisterRow(key: row.key, amounts: row.amounts, balance: balance))
+                let amounts = row.amounts.filter { $0.value != 0 }
+                for (commodity, amount) in amounts { balance[commodity, default: 0] += amount }
+                result.append(RegisterRow(key: row.key, amounts: amounts, balance: balance.filter { $0.value != 0 }))
             }
-            for row in rows {
-                let key = try Self.key(row)
-                if current?.key != key {
+            while let row = try cursor.next() {
+                let entryID: String = row[0]
+                if entryID != currentID {
                     finish()
-                    current = (key, [:])
+                    currentID = entryID
+                    current = (try Self.key(id: entryID, date: row[1], createdAt: row[2]), [:])
                 }
-                let amount: Int64 = row["amount"]
-                if amount != 0 { current!.amounts[try row.id("commodity_id")] = amount }
+                let commodityText: String = row[3]
+                let commodity: Commodity.ID
+                if let known = commodities[commodityText] {
+                    commodity = known
+                } else {
+                    guard let parsed = Commodity.ID(commodityText) else { throw StoreError.corrupt("commodity_id") }
+                    commodities[commodityText] = parsed
+                    commodity = parsed
+                }
+                let amount: Int64 = row[4]
+                current!.amounts[commodity, default: 0] += amount
             }
             finish()
             return Register(accounts: accounts, rows: result)
@@ -113,17 +127,60 @@ public struct LedgerSnapshot: Sendable {
     /// Balance of every account (after merges), optionally as of the end of `date`.
     public func balances(asOf date: LocalDate? = nil) throws -> [Account.ID: Holdings] {
         try reader.read { db in
+            // Current balances are maintained by triggers; past ones are summed.
+            let rows = if let date {
+                try Row.fetchAll(db, sql: """
+                    SELECT resolved_account_id, commodity_id, SUM(amount) FROM posting WHERE date <= ?
+                    GROUP BY resolved_account_id, commodity_id
+                    """, arguments: [date.description])
+            } else {
+                try Row.fetchAll(db, sql: "SELECT account_id, commodity_id, amount FROM balance WHERE amount != 0")
+            }
+            var result: [Account.ID: Holdings] = [:]
+            for row in rows {
+                let amount: Int64 = row[2]
+                guard amount != 0 else { continue }
+                guard let account = Account.ID(row[0] as String), let commodity = Commodity.ID(row[1] as String)
+                else { throw StoreError.corrupt("balance") }
+                result[account, default: [:]][commodity] = amount
+            }
+            return result
+        }
+    }
+
+    /// Net amount posted to every account (after merges) between two dates, inclusive: what a
+    /// category spent or earned over a period.
+    public func activity(in dates: ClosedRange<LocalDate>) throws -> [Account.ID: Holdings] {
+        try reader.read { db in
             var result: [Account.ID: Holdings] = [:]
             for row in try Row.fetchAll(db, sql: """
                 SELECT resolved_account_id, commodity_id, SUM(amount) AS amount FROM posting
-                WHERE ?1 IS NULL OR date <= ?1
+                WHERE date BETWEEN ? AND ?
                 GROUP BY resolved_account_id, commodity_id
-                """, arguments: [date?.description]) {
+                """, arguments: [dates.lowerBound.description, dates.upperBound.description]) {
                 let amount: Int64 = row["amount"]
                 guard amount != 0 else { continue }
                 result[try row.id("resolved_account_id"), default: [:]][try row.id("commodity_id")] = amount
             }
             return result
+        }
+    }
+
+    /// The most recent entry for each payee containing `text`, payees starting with it first.
+    /// Used to autofill a new entry from the last one with the same payee.
+    public func payeeSuggestions(matching text: String, limit: Int = 8) throws -> [Entry] {
+        guard let text = Text.normalize(text) else { return [] }
+        return try reader.read { db in
+            let ids = try String.fetchAll(db, sql: """
+                SELECT id FROM (
+                  SELECT id, payee, ROW_NUMBER() OVER (PARTITION BY payee ORDER BY date DESC, created_at DESC) AS n,
+                         payee LIKE ?1 ESCAPE '\\' AS prefix, date, created_at
+                  FROM entry WHERE payee LIKE ?2 ESCAPE '\\'
+                ) WHERE n = 1
+                ORDER BY prefix DESC, date DESC, created_at DESC
+                LIMIT ?3
+                """, arguments: ["\(Self.escapeLike(text))%", "%\(Self.escapeLike(text))%", limit])
+            return try db.entries(ids.compactMap(Entry.ID.init))
         }
     }
 
@@ -134,8 +191,22 @@ public struct LedgerSnapshot: Sendable {
 
     // MARK: Helpers
 
+    private static func escapeLike(_ text: String) -> String {
+        text.replacingOccurrences(of: "\\", with: "\\\\")
+            .replacingOccurrences(of: "%", with: "\\%")
+            .replacingOccurrences(of: "_", with: "\\_")
+    }
+
+    /// A journal key from a row selecting `id, date, created_at` in that order.
     private static func key(_ row: Row) throws -> JournalKey {
-        JournalKey(date: try row.date("date"), createdAt: try row.hlc("created_at"), id: try row.id("id"))
+        try key(id: row[0], date: row[1], createdAt: row[2])
+    }
+
+    private static func key(id: String, date: String, createdAt: String) throws -> JournalKey {
+        guard let id = Entry.ID(id), let date = LocalDate(date), let createdAt = HLCTimestamp(createdAt) else {
+            throw StoreError.corrupt("journal key \(id)")
+        }
+        return JournalKey(date: date, createdAt: createdAt, id: id)
     }
 
     private static func whereClause(_ filter: JournalFilter) -> (String, StatementArguments) {
@@ -146,9 +217,7 @@ public struct LedgerSnapshot: Sendable {
             arguments += [dates.lowerBound.description, dates.upperBound.description]
         }
         if let text = Text.normalize(filter.text) {
-            let escaped = text.replacingOccurrences(of: "\\", with: "\\\\")
-                .replacingOccurrences(of: "%", with: "\\%")
-                .replacingOccurrences(of: "_", with: "\\_")
+            let escaped = escapeLike(text)
             clauses.append(#"(e.payee LIKE ? ESCAPE '\' OR e.memo LIKE ? ESCAPE '\')"#)
             arguments += ["%\(escaped)%", "%\(escaped)%"]
         }

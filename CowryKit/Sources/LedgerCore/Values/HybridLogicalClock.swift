@@ -28,11 +28,14 @@ extension HLCTimestamp: CustomStringConvertible, LosslessStringConvertible {
     }
 
     public init?(_ description: String) {
-        let parts = description.split(separator: "-")
-        guard parts.count == 2, parts[0].count == 13, parts[1].count == 4,
-              let millis = Int64(parts[0]), millis >= 0,
-              let counter = UInt16(parts[1]), counter <= 9999
-        else { return nil }
+        let parts: (Int64, UInt16)? = ASCII.withBytes(description) { bytes in
+            guard bytes.count == 18, bytes[13] == UInt8(ascii: "-"),
+                  let millis = ASCII.digits(bytes, 0..<13),
+                  let counter = ASCII.digits(bytes, 14..<18)
+            else { return nil }
+            return (millis, UInt16(counter))
+        }
+        guard let (millis, counter) = parts else { return nil }
         self.init(millis: millis, counter: counter)
     }
 }
