@@ -110,7 +110,7 @@ public struct AccountTree: Sendable {
         return result
     }
 
-    /// "자산:은행:신한" style path, following parents.
+    /// "Assets:Bank:Checking" style path, following parents.
     public func path(of id: Account.ID, separator: String = ":") -> String {
         var names: [String] = []
         var current: Account.ID? = id

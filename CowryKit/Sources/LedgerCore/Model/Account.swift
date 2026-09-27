@@ -12,7 +12,7 @@ public struct Account: Identifiable, Hashable, Sendable {
 
     public let id: ID
     public let parent: ID?
-    /// This account's own name ("신한카드"), not its full path.
+    /// This account's own name ("Checking"), not its full path.
     public let name: String
     /// Fixed at creation; children always share their parent's type.
     public let type: AccountType
